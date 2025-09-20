@@ -2,12 +2,12 @@ from fastapi import APIRouter, HTTPException
 import json
 from pathlib import Path
 from models.champion import ChampionSummary, ChampionDetail
+from services.loader import load_json
 
 router = APIRouter()
 
 DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "champions.json"
-with open(DATA_PATH, encoding="utf-8") as f:
-    _CHAMPIONS = json.load(f)
+_CHAMPIONS = load_json(DATA_PATH)
 
 @router.get("/champions", response_model=list[ChampionSummary])
 def list_champions():

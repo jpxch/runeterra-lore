@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import champions
+from api import champions, regions, skins
 
 app = FastAPI()
 
@@ -13,7 +13,5 @@ app.add_middleware(
 )
 
 app.include_router(champions.router, prefix="/api")
-
-@app.get("/")
-def root():
-    return {"message": "Runeterra Lore API is live"}
+app.include_router(regions.router, prefix="/api")
+app.include_router(skins.router, prefix="/api")

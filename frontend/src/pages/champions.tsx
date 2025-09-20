@@ -31,7 +31,7 @@ export default function ChampionsPage() {
         {champs.map((c) => (
           <Link
             key={c.id}
-            to={`/champion/${c.id}`}
+            to={`/champions/${c.id}`}
             style={{ textDecoration: "none", color: "inherit" }}
           >
             <article

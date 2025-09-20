@@ -20,7 +20,7 @@ export async function fetchChampions(): Promise<ChampionSummary[]> {
 }
 
 export async function fetchChampion(id: string): Promise<ChampionDetail> {
-    const res = await fetch(`${API_BASE}/${id}`);
+    const res = await fetch(`${API_BASE}/champions/${id}`);
     if (!res.ok) throw new Error("Champion not found");
     return res.json();
 }
