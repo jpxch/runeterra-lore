@@ -1,11 +1,12 @@
+import { Routes, Route } from "react-router-dom";
 import ChampionsPage from "./pages/champions";
+import ChampionDetailPage from "./pages/ChampionDetail";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <ChampionsPage />
-    </div>
+    <Routes>
+      <Route path="/" element={<ChampionsPage />} />
+      <Route path="/champion/:id" element={<ChampionDetailPage />} />
+    </Routes>
   );
 }
-
-export default App;
