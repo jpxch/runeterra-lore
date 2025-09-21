@@ -1,27 +1,25 @@
+import React from "react";
 import type { ChampionDetail } from "../lib/api";
 
-export default function ChampionAbilities({
-  abilities,
-}: {
-  abilities: ChampionDetail["abilities"];
-}) {
-  return (
-    <section style={{ marginBottom: 20 }}>
-      <h2>Abilities</h2>
-      <ul>
-        <li>
-          <strong>Q:</strong> {abilities.Q}
-        </li>
-        <li>
-          <strong>W:</strong> {abilities.W}
-        </li>
-        <li>
-          <strong>E:</strong> {abilities.E}
-        </li>
-        <li>
-          <strong>R:</strong> {abilities.R}
-        </li>
-      </ul>
-    </section>
-  );
+interface Props {
+  champion: ChampionDetail;
 }
+
+const ChampionAbilities: React.FC<Props> = ({ champion }) => {
+  if (!champion.abilities || champion.abilities.length === 0) {
+    return <p>No abilities available</p>;
+  }
+
+  return (
+    <div>
+      <h3>Abilities</h3>
+      <ul>
+        {champion.abilities.map((ability, idx) => (
+          <li key={idx}>{ability}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ChampionAbilities;
