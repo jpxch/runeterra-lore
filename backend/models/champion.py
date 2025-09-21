@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import Dict, List, Optional
+from models.region import Region
+from models.skin import Skin
 
 
 class ChampionSummary(BaseModel):
@@ -8,7 +10,12 @@ class ChampionSummary(BaseModel):
     region: str
     icon: Optional[str] = None
 
-class ChampionDetail(ChampionSummary):
+class ChampionDetail(BaseModel):
+    id: str
+    name: str
+    region: Region
+    icon: Optional[str] = None
     lore: str
     abilities: Dict[str, str]
-    skins: List[str]
+    skins: List[Skin]
+    relationships: Dict[str, List[str]]

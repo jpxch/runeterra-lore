@@ -1,6 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchChampion, type ChampionDetail } from "../lib/api";
+import ChampionAbilities from "../components/ChampionAbilities";
+import ChampionSkins from "../components/ChampionSkins";
+import ChampionRelationships from "../components/ChampionRelationships";
 
 export default function ChampionDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +19,7 @@ export default function ChampionDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div style={{ padding: 24 }}>Loading champion_</div>;
+  if (loading) return <div style={{ padding: 24 }}>Loading champion...</div>;
   if (error)
     return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
   if (!champ) return <div style={{ padding: 24 }}>No champion found.</div>;
@@ -27,40 +30,17 @@ export default function ChampionDetailPage() {
         &larr; Back
       </Link>
 
-      <h1 style={{ marginBottom: 4 }}>{champ.name}</h1>
-      <p style={{ opacity: 0.8, marginBottom: 16 }}>{champ.region}</p>
+      <h1>{champ.name}</h1>
+      <p style={{ opacity: 0.8 }}>{champ.region.name}</p>
 
       <section style={{ marginBottom: 20 }}>
         <h2>Lore</h2>
         <p>{champ.lore}</p>
       </section>
 
-      <section style={{ marginBottom: 20 }}>
-        <h2>Abilities</h2>
-        <ul>
-          <li>
-            <strong>Q:</strong> {champ.abilities.Q}
-          </li>
-          <li>
-            <strong>W:</strong> {champ.abilities.W}
-          </li>
-          <li>
-            <strong>E:</strong> {champ.abilities.E}
-          </li>
-          <li>
-            <strong>R:</strong> {champ.abilities.R}
-          </li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Skins</h2>
-        <ul>
-          {champ.skins.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
-      </section>
+      <ChampionAbilities abilities={champ.abilities} />
+      <ChampionSkins skins={champ.skins} />
+      <ChampionRelationships relationships={champ.relationships} />
     </main>
   );
 }

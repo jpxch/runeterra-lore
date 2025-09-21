@@ -1,5 +1,24 @@
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000/api";
 
+export interface Region {
+    id: string;
+    name: string;
+    icon?: string | null;
+    description?: string;
+}
+
+export interface Skin {
+    id: string;
+    championId: string;
+    name: string;
+    splash?: string | null;
+}
+
+export interface Relationships {
+    allies: string[];
+    rivals: string[];
+}
+
 export interface ChampionSummary {
     id: string;
     name: string;
@@ -7,10 +26,15 @@ export interface ChampionSummary {
     icon?: string | null;
 }
 
-export interface ChampionDetail extends ChampionSummary {
+export interface ChampionDetail {
+    id: string;
+    name: string;
+    region: Region;
+    icon?: string | null;
     lore: string;
     abilities: { Q: string; W: string; E: string; R: string };
-    skins: string[];
+    skins: Skin[];
+    relationships: Relationships;
 }
 
 export async function fetchChampions(): Promise<ChampionSummary[]> {
