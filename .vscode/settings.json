@@ -1,7 +1,11 @@
 {
-    "cSpell.words": [
-        "Demacia",
-        "garen",
-        "Garen"
-    ]
+  "cSpell.words": [
+    "appuser",
+    "Demacia",
+    "garen",
+    "Garen",
+    "pyproject",
+    "uvicorn",
+    "virtualenvs"
+  ]
 }
