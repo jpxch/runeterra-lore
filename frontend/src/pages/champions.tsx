@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchChampions, type ChampionSummary } from "../lib/api";
+import { getChampions, type ChampionSummary } from "../lib/api";
 
 export default function ChampionsPage() {
   const [champs, setChamps] = useState<ChampionSummary[]>([]);
@@ -8,7 +8,7 @@ export default function ChampionsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchChampions()
+    getChampions()
       .then(setChamps)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -42,29 +42,10 @@ export default function ChampionsPage() {
                 background: "#111",
               }}
             >
-              {c.icon ? (
-                <img
-                  src={c.icon}
-                  alt={c.name}
-                  style={{
-                    width: "100%",
-                    height: 120,
-                    objectFit: "cover",
-                    borderRadius: 8,
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: 120,
-                    background: "#222",
-                    borderRadius: 8,
-                  }}
-                />
-              )}
               <h3 style={{ margin: "12px 0 4px" }}>{c.name}</h3>
-              <span style={{ opacity: 0.8 }}>{c.region}</span>
+              <span style={{ opacity: 0.8 }}>
+                {c.region ?? "Unknown region"}
+              </span>
             </article>
           </Link>
         ))}

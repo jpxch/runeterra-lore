@@ -1,19 +1,20 @@
-FROM python:3.12.6-slim AS base
+FROM python:3.12.6-slim
 
 RUN useradd -ms /bin/bash appuser
 
-WORKDIR /app
+WORKDIR /app/backend
 
 RUN pip install --no-cache-dir poetry==1.8.3
 COPY backend/pyproject.toml backend/poetry.lock ./
 
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --without dev
+    && poetry install --no-interaction --no-ansi
 
-COPY backend /app
+COPY backend /app/backend/
 
 USER appuser
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "${UVICORN_HOST}", "--port", "${UVICORN_PORT}"]
+WORKDIR /app
+CMD ["python", "-m", "backend.run"]

@@ -12,7 +12,7 @@ COPY frontend /app
 
 RUN pnpm run build
 
-FROM nginx1.27-alpine
+FROM nginx:1.27-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 

@@ -1,25 +1,20 @@
-import React from "react";
-import type { ChampionDetail } from "../lib/api";
+type Props = {
+  skins: string[];
+};
 
-interface Props {
-  champion: ChampionDetail;
-}
-
-const ChampionSkins: React.FC<Props> = ({ champion }) => {
-  if (!champion.skins || champion.skins.length === 0) {
+export default function ChampionSkins({ skins }: Props) {
+  if (!skins || skins.length === 0) {
     return <p>No skins available</p>;
   }
 
   return (
-    <div>
+    <section style={{ marginBottom: 20 }}>
       <h3>Skins</h3>
       <ul>
-        {champion.skins.map((skin, idx) => (
+        {skins.map((skin, idx) => (
           <li key={idx}>{skin}</li>
         ))}
       </ul>
-    </div>
+    </section>
   );
-};
-
-export default ChampionSkins;
+}

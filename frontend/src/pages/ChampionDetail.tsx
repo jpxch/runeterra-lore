@@ -1,9 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchChampion, type ChampionDetail } from "../lib/api";
+import { getChampion, type ChampionDetail } from "../lib/api";
 import ChampionAbilities from "../components/ChampionAbilities";
 import ChampionSkins from "../components/ChampionSkins";
-import ChampionRelationships from "../components/ChampionRelationships";
 
 export default function ChampionDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,15 +12,14 @@ export default function ChampionDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    fetchChampion(id)
+    getChampion(id)
       .then(setChamp)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <div style={{ padding: 24 }}>Loading champion...</div>;
-  if (error)
-    return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
+  if (error) return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
   if (!champ) return <div style={{ padding: 24 }}>No champion found.</div>;
 
   return (
@@ -31,16 +29,15 @@ export default function ChampionDetailPage() {
       </Link>
 
       <h1>{champ.name}</h1>
-      <p style={{ opacity: 0.8 }}>{champ.region.name}</p>
+      <p style={{ opacity: 0.8 }}>{champ.region ?? "Unknown region"}</p>
 
       <section style={{ marginBottom: 20 }}>
         <h2>Lore</h2>
         <p>{champ.lore}</p>
       </section>
 
-      <ChampionAbilities abilities={champ.abilities} />
-      <ChampionSkins skins={champ.skins} />
-      <ChampionRelationships relationships={champ.relationships} />
+      {champ.abilities && <ChampionAbilities abilities={champ.abilities} />}
+      {champ.skins && <ChampionSkins skins={champ.skins} />}
     </main>
   );
 }

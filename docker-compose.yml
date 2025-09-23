@@ -9,8 +9,10 @@ services:
     ports:
       - "${UVICORN_PORT}:8000"
     volumes:
-      - ./backend:/app
+      - ./backend:/app/backend
       - ./data:/app/data
+    env_file:
+      - .env
     environment:
       - PYTHONUNBUFFERED=1
     healthcheck:

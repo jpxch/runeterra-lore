@@ -1,25 +1,20 @@
-import React from "react";
-import type { ChampionDetail } from "../lib/api";
+type Props = {
+  abilities: string[];
+};
 
-interface Props {
-  champion: ChampionDetail;
-}
-
-const ChampionAbilities: React.FC<Props> = ({ champion }) => {
-  if (!champion.abilities || champion.abilities.length === 0) {
+export default function ChampionAbilities({ abilities }: Props) {
+  if (!abilities || abilities.length === 0) {
     return <p>No abilities available</p>;
   }
 
   return (
-    <div>
+    <section style={{ marginBottom: 20 }}>
       <h3>Abilities</h3>
       <ul>
-        {champion.abilities.map((ability, idx) => (
+        {abilities.map((ability, idx) => (
           <li key={idx}>{ability}</li>
         ))}
       </ul>
-    </div>
+    </section>
   );
-};
-
-export default ChampionAbilities;
+}
