@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from typing import List
 
-from backend.services.loader import load_json
+from backend.services.loader import champions_repo
 from backend.models.champion import ChampionSummary, ChampionDetail
 
-router = APIRouter()
+router = APIRouter(prefix="/champions", tags=["champions"])
 
 
 @router.get("/champions", response_model=List[ChampionSummary])
