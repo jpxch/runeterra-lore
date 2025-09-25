@@ -1,37 +1,12 @@
-from fastapi import APIRouter, HTTPException, Query
-from typing import List
+from fastapi import APIRouter
+import json
+from pathlib import Path
 
-from backend.services.loader import champions_repo
-from backend.models.champion import ChampionSummary, ChampionDetail
+router = APIRouter()
 
-router = APIRouter(prefix="/champions", tags=["champions"])
-
-
-@router.get("/champions", response_model=List[ChampionSummary])
+@router.get("/champions")
 def get_champions():
-    """
-    Return a list of champions with summary fields.
-    """
-    data = load_json("data/champions.json")
-    if not isinstance(data, list):
-        raise HTTPException(status_code=500, detail="Invalid champions data")
-    
-    return [
-        ChampionSummary(**champ) for champ in data
-    ]
-
-
-@router.get("/champions/{champion_id}", response_model=ChampionDetail)
-def get_champion(champion_id: str):
-    """
-    Return detailed information about a single champion.
-    """
-    data = load_json("data/champions.json")
-    if not isinstance(data, list):
-        raise HTTPException(status_code=500, detail="Invalid champions data")
-
-    for champ in data:
-        if champ.get("id") == champion_id:
-            return ChampionDetail(**champ)
-
-    raise HTTPException(status_code=404, detail="Champion not found")
+    path = Path(__file__).parent.parent.parent / "data" / "champions.json"
+    with open(path) as f:
+        champions = json.load(f)
+    return champions
