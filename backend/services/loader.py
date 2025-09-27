@@ -1,138 +1,102 @@
-from __future__ import annotations
 import json
-import time
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import httpx
-
+from backend.models.champion import ChampionDetail, ChampionSummary
+from backend.models.region import RegionSummary, RegionDetail
 from backend.config import settings
-from backend.models.champion import ChampionSummary, ChampionDetail
 
-_CHAMPION_FIXTURE = settings.data_dir / "champions.json"
-_CHAMPION_CACHE = settings.cache_dir / "champions.cache.json"
-_VERSION_CACHE = settings.cache_dir / "version.txt"
+def load_json(path: Path) -> Any:
+    """Load raw JSON from the given path. Returns an empty list error."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = f.read().strip()
+            return json.loads(data) if data else []
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+CHAMPIONS_FILE = settings.data_dir / "champions.json"
 
 class ChampionRepository:
-    """Unified data access: live -> cache -> fixture."""
+    """Repository for champion data."""
     
     def __init__(self) -> None:
-        self._by_id: Dict[str, ChampionDetail] = {}
+        self._by_id: Dict[str, dict] = self._load()
 
-    # -------- Public API --------
-    def list_summaries(self, search: Optional[str] = None) -> List[ChampionSummary]:
-        data = self._ensure_loaded()
-        items = [ChampionSummary.model_validate(c) for c in data.values()]
-        if search:
-            q = search.lower()
-            items = [s for s in items if q in s.name.lower() or (s.region or "").lower().find(q) >= 0]
-        return sorted(items, key=lambda s: s.name.lower())
+    def _load(self) -> Dict[str, dict]:
+        try:
+            raw = load_json(CHAMPIONS_FILE)
+        except Exception:
+            return {}
+        if isinstance(raw, list):
+            return {item["id"]: item for item in raw if isinstance(item, dict) and "id" in item}
+        if isinstance(raw, dict):
+            return {k: v for k, v in raw.items() if isinstance(v, dict)}
+        return {}
     
-    def get_detail(self, champ_id: str) -> Optional[ChampionDetail]:
-        data = self._ensure_loaded()
-        return data.get(champ_id)
-
-    # -------- Internal plumbing --------
-    def _ensure_loaded(self) -> Dict[str, ChampionDetail]:
-        if self._by_id:
-            return self._by_id
-
-        live = self._try_live()
-        if live:
-            self._by_id = live
-            self._write_cache(live)
-            return self._by_id
-        
-        cached = self._try_cache()
-        if cached:
-            self._by_id = cached
-            return self._by_id
-
-        fixture = self._try_fixtures()
-        self._by_id = fixtures
-        return self._by_id
-
-    def _try_live(self) -> Optional[Dict[str, ChampionDetail]]:
-        """Fetch latest champion list from Data Dragon."""
-        try:
-            with httpx.Client(timeout=10.0) as client:
-                # Fetch latest patch version
-                versions_url = "https://ddragon.leagueoflegends.com/api/versions.json"
-                version_resp = client.get(versions_url)
-                version_resp.raise_for_status()
-                versions = version_resp.json()
-                if not versions:
-                    return None
-                latest_version = versions[0]
-
-                # cache version string
-                _VERSION_CACHE.write_text(latest_version, encoding="utf-8")
-
-                # Fetch champions manifest
-                champ_url = f"https://ddragon.leagueoflegends.com/cdn/{latest_version}/data/{settings.riot_defatult_locale}/champion.json"
-                resp = client.get(champs_url)
-                resp.raise_for_status()
-                payload = resp.json()
-
-            return self._normalize_ddragon(payload)
-        except Exception:
-            return None
-
-    def _try_cache(self) -> Optional[Dict[str, ChampionDetail]]:
-        try:
-            if not _CHAMPIONS_CACHE.exists():
-                return None
-            if self._expired(_CHAMPION_CACHE):
-                return None
-            data = json.loads(_CHAMPION_CACHE.read_text(encoding="utf-8"))
-            return {cid: ChampionDetail.model_validate(c) for cid, c in data.items()}
-        except Exception:
-            return None
-
-    def _write_cache(self, date: Dict[str, ChampionDetail]) -> None:
-        try:
-            serializable = {k: v.model_dump() for k, v in data.items()}
-            _CHAMPION_CACHE.write_text(json.dumps(serializable, ensure_ascii=False, indent=2), encoding="utf-8")
-        except Exception:
-            pass
-
-    def _try_fixtures(self) -> Dict[str, ChampionDetail]:
-        if not _CHAMPION_FIXTURE.exists():
-            return {}
-        try:
-            raw = json.loads(_CHAMPIONS_FIXTURE.read_text(encoding="utf-8"))
-            return {c["id"]: ChampionDetail.model_validate(c) for c in raw}
-        except Exception:
-            return {}
-
-    def _normalize_ddragon(self, raw) -> Dict[str, ChampionDetail]:
-        """Transform ddragon schema into ChampionDetail objects."""
-        out: Dict[str, ChampionDetail] = {}
-        data = raw.get("data", {})
-        for cid, champ in data.items():
+    def list_summaries(self, search: Optional[str] = None) -> List[ChampionSummary]:
+        out: List[ChampionSummary] = []
+        for champ in self._by_id.values():
+            name = champ.get("name", "")
+            if search and search.lower() not in name.lower():
+                continue
             try:
-                detail = ChampionDetail(
-                    id=champ["id"].lower(),
-                    name=champ["name"],
-                    region=None,
-                    icon=f"/cdn/{champ.get('image', {}).get('full')}" if "image" in champ else None,
-                    roles=champ.get("tags", []),
-                    lore=champ.get("blurb"),
-                    abilities={},
-                    skins=[s.get("name") for s in champ.get("skins", [])] if "skins" in champ else []
-                )
-                out[detail.id] = detail
+                out.append(ChampionSummary(**champ))
             except Exception:
                 continue
-        return out
+        return sorted(out, key=lambda c: c.name.lower())
 
-    def _expired(self, path: Path) -> bool:
+    def get_detail(self, champ_id: str) -> Optional[ChampionDetail]:
+        """Return a single ChampionDetail by ID, or None if not found."""
+        raw = self._by_id.get(champ_id)
+        if not raw:
+            return None
         try:
-            mtime = path.stat().st_mtime
-            return (time.time() - mtime) > 86400
+            return ChampionDetail(**raw)
         except Exception:
-            return True
+            return None
 
-
-# Singleton accessor
 champions_repo = ChampionRepository()
+
+REGIONS_FILE = settings.data_dir / "regions.json"
+
+class RegionRepository:
+    """Repository for region data, mirroring champions pattern."""
+
+    def __init__(self) -> None:
+        self._by_id: Dict[str, dict] = self._load()
+
+    def _load(self) -> Dict[str, dict]:
+        try:
+            raw = load_json(REGIONS_FILE)
+        except Exception:
+            return {}
+        if isinstance(raw, list):
+            return {item["id"]: item for item in raw if isinstance(item, dict) and "id" in item}
+        if isinstance(raw, dict):
+            return {k: v for k, v in raw.items() if isintance(v, dict)}
+        return {}
+
+    def list_summaries(self, search: Optional[str] = None) -> List[RegionSummary]:
+        out: List[RegionSummary] = []
+        for region in self._by_id.values():
+            name = region.get("name", "")
+            if search and search.lower() not in name.lower():
+                continue
+            try:
+                out.append(RegionSummary(**region))
+            except Exception:
+                continue
+        return sorted(out, key=lambda r: r.name.lower())
+
+    def get_detail(self, region_id: str) -> Optional[RegionDetail]:
+        raw = self._by_id.get(region_id)
+        if not raw:
+            return None
+        try:
+            return RegionDetail(**raw)
+        except Exception:
+            return None
+ 
+# Instantiate a singleton repository to be imported by the API
+regions_repo = RegionRepository()

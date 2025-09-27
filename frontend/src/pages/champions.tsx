@@ -10,40 +10,25 @@ export default function ChampionsPage() {
   useEffect(() => {
     getChampions()
       .then(setChamps)
-      .catch((e) => setError(e.message))
+      .catch((e) => {
+        console.error(e);
+        setError("Failed to load champions.");
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div style={{ padding: 24 }}>Loading...</div>;
-  if (error)
-    return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
+  if (loading) return <div className="loading">Loading champions...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <main style={{ padding: 24, maxWidth: 1000, margin: "0 auto" }}>
-      <h1 style={{ marginBottom: 16 }}>Champions</h1>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: 16,
-        }}
-      >
+    <main className="champions-page">
+      <h1>Champions</h1>
+      <div className="grid">
         {champs.map((c) => (
-          <Link
-            key={c.id}
-            to={`/champions/${c.id}`}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <article
-              style={{
-                border: "1px solid #2a2a2a",
-                borderRadius: 12,
-                padding: 16,
-                background: "#111",
-              }}
-            >
-              <h3 style={{ margin: "12px 0 4px" }}>{c.name}</h3>
-              <span style={{ opacity: 0.8 }}>
+          <Link key={c.id} to={`/champions/${c.id}`} className="champion-link">
+            <article className="champion-card">
+              <h3 className="champion-name">{c.name}</h3>
+              <span className="champion-region">
                 {c.region ?? "Unknown region"}
               </span>
             </article>

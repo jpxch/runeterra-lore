@@ -6,38 +6,43 @@ import ChampionSkins from "../components/ChampionSkins";
 
 export default function ChampionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [champ, setChamp] = useState<ChampionDetail | null>(null);
+  const [champion, setChampion] = useState<ChampionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
     getChampion(id)
-      .then(setChamp)
-      .catch((e) => setError(e.message))
+      .then(setChampion)
+      .catch((e) => {
+        console.error(e);
+        setError("Failed to load champion.");
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div style={{ padding: 24 }}>Loading champion...</div>;
-  if (error) return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
-  if (!champ) return <div style={{ padding: 24 }}>No champion found.</div>;
+  if (loading) return <div className="loading">Loading champion...</div>;
+  if (error) return <div className="error">{error}</div>;
+  if (!champion) return <div className="error">Champion not found.</div>;
 
   return (
-    <main style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
-      <Link to="/" style={{ display: "inline-block", marginBottom: 16 }}>
-        &larr; Back
-      </Link>
+    <main className="champion-detail-page">
+      <h1 className="champion-name">{champion.name}</h1>
+      <p className="champion-lore">{champion.lore}</p>
 
-      <h1>{champ.name}</h1>
-      <p style={{ opacity: 0.8 }}>{champ.region ?? "Unknown region"}</p>
-
-      <section style={{ marginBottom: 20 }}>
-        <h2>Lore</h2>
-        <p>{champ.lore}</p>
+      <section className="abiliies-section">
+        <h2 className="section-title">Abilities</h2>
+        <ChampionAbilities abilities={champion.abilities ?? []} />
       </section>
 
-      {champ.abilities && <ChampionAbilities abilities={champ.abilities} />}
-      {champ.skins && <ChampionSkins skins={champ.skins} />}
+      <section className="skins-sectin">
+        <h2 className="section-title">Skins</h2>
+        <ChampionSkins skins={champion.skins ?? []} />
+      </section>
+
+      <Link to="/champions" className="back-link">
+        &larr; Back to Champions
+      </Link>
     </main>
   );
 }

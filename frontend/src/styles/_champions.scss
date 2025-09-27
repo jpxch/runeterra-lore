@@ -1,0 +1,44 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+.champions-page {
+  background: $color-black;
+  color: $color-white;
+  font-family: $font-primary;
+  min-height: 100vh;
+  padding: $spacing-lg;
+
+  h1 {
+    @include neon-text($color-blue);
+    margin-bottom: $spacing-lg;
+    font-size: 2rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: $spacing-md;
+  }
+
+  .champion-card {
+    @include glass-panel;
+    padding: $spacing-md;
+    text-align: center;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    .champion-name {
+      font-weight: 600;
+      margin-top: $spacing-sm;
+    }
+    
+    .champion-lore {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: $spacing-ml;
+    }
+  }
+}

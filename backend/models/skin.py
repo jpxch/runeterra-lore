@@ -1,11 +1,14 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date
 
 
 class Skin(BaseModel):
+    """Standalone skin entry (normalized from champion data)."""
     id: str
     championId: str
     name: str
-    releaseDate: Optional[date] = None
+    num: int
+    chromas: bool
+    releaseDate: Optional[str] = None
     splash: Optional[str] = None
+    loading: Optional[str] = None

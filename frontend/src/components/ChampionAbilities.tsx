@@ -1,20 +1,16 @@
 type Props = {
-  abilities: string[];
+  abilities: { id: string; name: string; description: string }[];
 };
 
 export default function ChampionAbilities({ abilities }: Props) {
-  if (!abilities || abilities.length === 0) {
-    return <p>No abilities available</p>;
-  }
-
   return (
-    <section style={{ marginBottom: 20 }}>
-      <h3>Abilities</h3>
-      <ul>
-        {abilities.map((ability, idx) => (
-          <li key={idx}>{ability}</li>
-        ))}
-      </ul>
-    </section>
+    <div className="abilities-list">
+      {abilities.map((a) => (
+        <article key={a.id} className="ability-card">
+          <h3 className="ability-name">{a.name}</h3>
+          <p className="ability-desc">{a.description}</p>
+        </article>
+      ))}
+    </div>
   );
 }

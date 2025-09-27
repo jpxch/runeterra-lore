@@ -6,7 +6,6 @@ from backend.config import settings
 
 app = FastAPI(
     title="Runeterra Lore API",
-    description="Backend API for champions, regions, and skins",
     version="1.0.0",
 )
 

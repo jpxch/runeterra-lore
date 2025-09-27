@@ -1,20 +1,18 @@
 type Props = {
-  skins: string[];
+  skins: { id: string; name: string; imageUrl?: string }[];
 };
 
 export default function ChampionSkins({ skins }: Props) {
-  if (!skins || skins.length === 0) {
-    return <p>No skins available</p>;
-  }
-
   return (
-    <section style={{ marginBottom: 20 }}>
-      <h3>Skins</h3>
-      <ul>
-        {skins.map((skin, idx) => (
-          <li key={idx}>{skin}</li>
-        ))}
-      </ul>
-    </section>
+    <div className="skins-list">
+      {skins.map((s) => (
+        <article key={s.id} className="skin-card">
+          {s.imageUrl && (
+            <img src={s.imageUrl} alt={s.name} className="skin-image" />
+          )}
+          <p className="skin-name">{s.name}</p>
+        </article>
+      ))}
+    </div>
   );
 }
