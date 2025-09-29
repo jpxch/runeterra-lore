@@ -1,23 +1,26 @@
+from typing import List
 from fastapi import APIRouter, HTTPException
-from pathlib import Path
-import json
-from models.skin import Skin
-from services.loader import load_json
+
+from backend.models.skin import Skin
+from backend.services.loader import skins_repo
 
 
-router = APIRouter()
-
-DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "skins.json"
-_SKINS = load_json(DATA_PATH)
+router = APIRouter(tags=["skins"])
 
 
 @router.get("/skins", response_model=list[Skin])
 def list_skins():
-    return _SKINS
+    """
+    Return all skins normalized from ddragon data.
+    """
+    return skins_repo.list_all()
 
 @router.get("/skins/{skin_id}", response_model=Skin)
 def get_skin(skin_id: str):
-    skin = next((s for s in _SKINS if s["id"].lower() == skin_id.lower()), None)
+    """
+    Return a single skin by ID.
+    """
+    skin = skins_repo.get(skin_id)
     if not skin:
-        raise HTTPException(status_code=404, detail="Skin not found")
+        raise HTTPException(status_code=404, detail=f"Skin '{skin_id}' not found")
     return skin

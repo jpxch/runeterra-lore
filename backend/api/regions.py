@@ -1,22 +1,25 @@
-from fastapi import APIRouter, HTTPException
-from pathlib import Path
-import json
-from models.region import Region
-from services.loader import load_json
+from typing import List, Optional
+from fastapi import APIRouter, HTTPException, Query
+
+from backend.models.region import RegionSummary, RegionDetail
+from backend.services.loader import regions_repo
+
+router = APIRouter(tags=["regions"])
+
+@router.get("/regions", response_model=List[RegionSummary])
+def list_regions(search: Optional[str] = Query(defatul=None, description="Filter by region name")):
+    """
+    Retun all regions, or filter them by case-insensitve substring in the name.
+    """
+    return regions_repo.list_summaries(search)
 
 
-router = APIRouter()
-
-DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "regions.json"
-_REGIONS = load_json(DATA_PATH)
-
-@router.get("/regions", response_model=list[Region])
-def list_regions():
-    return _REGIONS
-
-@router.get("/regions/{region_id}", response_model=Region)
+@router.get("/regions/{region_id}", response_model=RegionDetail)
 def get_region(region_id: str):
-    region = next((r for r in _REGIONS if r["id"].lower() == region_id.lower()), None)
+    """
+    Return detailed information about a single region.
+    """
+    region = regions_repo.get_detail(region_id)
     if not region:
-        raise HTTPException(status_code=404, detail="Region not found")
+        raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
     return region

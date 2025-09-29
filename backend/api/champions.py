@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Query
 from backend.models.champion import ChampionDetail, ChampionSummary
 from backend.services.loader import champions_repo
 
-router = APIRouter()
+router = APIRouter(tags=["champions"])
 
 
 @router.get("/champions", response_model=List[ChampionSummary])
@@ -20,9 +20,9 @@ def list_champions(
 @router.get("/champions/{champion_id}", response_model=ChampionDetail)
 def get_champion(champion_id: str) -> ChampionDetail:
     """
-    Return detailed information about a single champion, or raise 404 if not found.
+    Return detailed information about a single champion.
     """
     champion = champions_repo.get_detail(champion_id)
     if champion is None:
-        raise HTTPException(status_code=404, detail="Champion not found")
+        raise HTTPException(status_code=404, detail=f"Champion '{champion_id}' not found")
     return champion
