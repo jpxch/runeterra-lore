@@ -41,7 +41,7 @@ DDRAGON_VERSION = get_latest_version()
 DDRAGON_BASE = f"https://ddragon.leagueoflegends.com/cdn/{DDRAGON_VERSION}/data/en_US"
 
 def fetch_ddragon_data(endpoint: str) -> Optional[dict]:
-    """Fetch JSON from ddragon, retun None if request fails."""
+    """Fetch JSON from ddragon, return None if request fails."""
     url = f"{DDRAGON_BASE}/{endpoint}"
     try:
         r = requests.get(url, timeout=10)
@@ -141,7 +141,7 @@ champions_repo = ChampionRepository()
 SKINS_FILE = settings.data_dir / "skins.json"
 
 class SkinRepository:
-    """Normnalize skins out of champion repo for standalone / skins API."""
+    """Normalize skins out of champion repo for standalone / skins API."""
     
     def __init__(self, champions: ChampionRepository) -> None:
         self._all: List[dict] = self._extract(champions._by_id)

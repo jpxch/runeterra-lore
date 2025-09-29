@@ -7,11 +7,12 @@ from backend.services.loader import regions_repo
 router = APIRouter(tags=["regions"])
 
 @router.get("/regions", response_model=List[RegionSummary])
-def list_regions(search: Optional[str] = Query(defatul=None, description="Filter by region name")):
+def list_regions(search: Optional[str] = Query(default=None, description="Filter by region name")):
     """
-    Retun all regions, or filter them by case-insensitve substring in the name.
+    Return all regions, or filter them by case-insensitive substring in the name.
     """
-    return regions_repo.list_summaries(search)
+    regions = regions_repo.list_summaries(search)
+    return [r.model_dump() for r in regions]
 
 
 @router.get("/regions/{region_id}", response_model=RegionDetail)
@@ -22,4 +23,4 @@ def get_region(region_id: str):
     region = regions_repo.get_detail(region_id)
     if not region:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    return region
+    return region.model_dump()

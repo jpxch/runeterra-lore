@@ -14,7 +14,7 @@ class ChampionStats(BaseModel):
     hp: float
     hpperlevel: float
     mp: float
-    mmperlevel: float
+    mpperlevel: Optional[float] = None
     movespeed: float
     armor: float
     armorperlevel: float
@@ -22,7 +22,7 @@ class ChampionStats(BaseModel):
     spellblockperlevel: float
     attackrange: float
     hpregen: float
-    gpregenperlevel: float
+    hpregenperlevel: Optional[float] = None
     mpregen: float
     mpregenperlevel: float
     crit: float
