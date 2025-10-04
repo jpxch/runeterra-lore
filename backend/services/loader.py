@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 from backend.models.champion import ChampionSummary, ChampionDetail, ChampionSkin
 from backend.models.skin import Skin
 from backend.models.region import RegionSummary, RegionDetail
-from backend.config import settings
+from backend.core.config import settings
 
 def load_json(path: Path) -> Any:
     """Load raw JSON from disk, or [] if not found/invalid."""

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.api import champions, regions, skins
-from backend.config import settings
+from backend.core.config import settings
 
 app = FastAPI(
     title="Runeterra Lore API",
