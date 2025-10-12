@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.api import champions, regions, skins
+from backend.api.routes import champions, regions, skins
 from backend.core.config import settings
 
 app = FastAPI(

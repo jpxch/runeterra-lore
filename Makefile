@@ -1,28 +1,28 @@
-.PHONY: test test-backend test-frontend lint lint-backend lint-frontend typecheck typecheck-backend typecheck-frontend
+.PHONY: test test-backend test-frontend lint docker-build docker-up docker-down
 
-all: lint typecheck test
+test-backend:
+	poetry run pytest /backend/tests -v --maxfail=1 --disable-warnings
+
+test-frontend:
+	cd frontend && pnpm test
 
 test: test-backend test-frontend
 
-test-backend:
-	poetry run pytest backend/tests -v --maxfail=1 --disable-warnings
+lint-backend:
+	poetry run black backend --check
+	poetry run isort backend --check
+	poetry run flake8 backend
 
-test-frontend:
-	frontend && pnpm test
+lint-frontend:
+	cd frontend && pnpm lint
 
 lint: lint-backend lint-frontend
 
-lint-backend:
-	poetry run black --check backend
-	poetry run isort ---check-only backend
+docker-build:
+	docker compose build
 
-lint-frontend:
-	frontend && pnpm lint
+docker-up:
+	docker compose up -d
 
-typecheck: typecheck-backend typecheck-frontend
-
-typecheck-backend:
-	poetry run mypy backend
-
-typecheck-frontend:e
-	frontend && pnpm typecheck
+docker-down:
+	docker compose down
