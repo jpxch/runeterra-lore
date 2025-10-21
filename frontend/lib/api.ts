@@ -1,35 +1,22 @@
-export interface ChampionSummary {
-    id: string;
-    name: string;
-    title: string;
-    region?: string;
-    roles: string[];
+// frontend/lib/api.ts
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000/api";
+
+console.log(
+    "Loaded API base from .env:",
+    process.env.NEXT_PUBLIC_API_BASE || "(default to 127.0.0.1:8000/api)"
+);
+
+// Get all champions
+export async function getChampions() {
+    const res = await fetch(`${API_BASE}/champions`);
+    if (!res.ok) throw new Error("Failed to fetch champions");
+    return res.json();
 }
 
-export interface ChampionDetail {
-    id: string;
-    name: string;
-    title: string;
-    region?: string;
-    lore: string;
-    abilities?: string[];
-    skins?: string[];
-}
-
-const API_URL = import.meta.env.VITE_API_URL ?? "/api";
-
-async function request<T>(path: string): Promise<T> {
-    const res = await fetch(`${API_URL}${path}`);
-    if (!res.ok) {
-        throw new Error(`API request failed: ${res.status} ${res.statusText}`);
-    }
-    return res.json() as Promise<T>;
-}
-
-export async function getChampions(): Promise<ChampionSummary[]> {
-    return request<ChampionSummary[]>("/champions");
-}
-
-export async function getChampion(id: string): Promise<ChampionDetail> {
-    return request<ChampionDetail>(`/champions/${id}`);
+// Get one champion
+export async function getChampion(id: string) {
+    const res = await fetch(`${API_BASE}/champions/${id}`);
+    if (!res.ok) throw new Error(`Failed to fetch champion ${id}`);
+    return res.json();
 }

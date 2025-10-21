@@ -1,9 +1,7 @@
-from __future__ import annotations
-
-from typing import List, Optional
+from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, ConfigDict
 
-from .skin import ChampionSkin
+from backend.models.skin import ChampionSkinSummary
 
 class ChampionSummary(BaseModel):
     """Minimal champion metadata used for listing."""
@@ -77,6 +75,6 @@ class ChampionDetail(ChampionSummary):
     stats: Optional[ChampionStats] = None
     passive: Optional[ChampionPassive] = None
     abilities: List[ChampionAbility] = Field(default_factory=list)
-    skins: List[ChampionSkin] = Field(default_factory=list)
+    skins: List[ChampionSkinSummary] = Field(default_factory=list)
 
     model_config = ConfigDict(extra="ignore")

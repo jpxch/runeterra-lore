@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getChampion } from "@/lib/api";
 import ChampionAbilities from "@/components/ChampionAbilities";
 import ChampionSkin from "@/components/ChampionSkins";
+import * as API from "@/lib/api";
+console.log(API);
 
 export default async function ChampionDetailPage({
     params,
@@ -16,7 +18,10 @@ export default async function ChampionDetailPage({
 
     const abilities = Array.isArray(champion.abilities)
         ? champion.abilities
-        : Object.entries(champion.abilities || {}).map(([id, name]) => ({ id, name }));
+        : Object.entries(champion.abilities || {}).map(([id, name]) => ({
+              id,
+              name,
+          }));
 
     return (
         <main className="champion-detail-page">
@@ -30,7 +35,7 @@ export default async function ChampionDetailPage({
 
             <section className="skins-section">
                 <h2 className="section-title">Skins</h2>
-                <ChampionSkins skins={champion.skins ?? []} />
+                <ChampionSkin skins={champion.skins ?? []} />
             </section>
 
             <Link href="/champions" className="back-link">
