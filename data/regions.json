@@ -1,8 +1,14 @@
 [
-  {
-    "id": "ionia",
-    "name": "Ionia",
-    "description": "A land of spiritual harmony and martial tradition.",
-    "icon": "/assets/regions/ionia.png"
-  }
+    {
+        "id": "ionia",
+        "name": "Ionia",
+        "description": "The First Lands, home of balance and harmony.",
+        "icon": "/assets/regions/ionia.png"
+    },
+    {
+        "id": "demacia",
+        "name": "Demacia",
+        "description": "A proud, lawful kingdom of honor and duty.",
+        "icon": "/assets/regions/demacia.png"
+    }
 ]
