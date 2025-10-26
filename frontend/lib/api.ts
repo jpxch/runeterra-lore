@@ -1,22 +1,25 @@
 // frontend/lib/api.ts
 const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000/api";
+    process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
 
-console.log(
-    "Loaded API base from .env:",
-    process.env.NEXT_PUBLIC_API_BASE || "(default to 127.0.0.1:8000/api)"
-);
+async function fetchJSON<T>(url: string): Promise<T> {
+    const res = await fetch(url);
+    if (!res.ok) {
+        throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+}
 
 // Get all champions
-export async function getChampions() {
-    const res = await fetch(`${API_BASE}/champions`);
-    if (!res.ok) throw new Error("Failed to fetch champions");
-    return res.json();
-}
+export const getChampions = () =>
+    fetchJSON(`${API_BASE}/api/champions`);
 
 // Get one champion
-export async function getChampion(id: string) {
-    const res = await fetch(`${API_BASE}/champions/${id}`);
-    if (!res.ok) throw new Error(`Failed to fetch champion ${id}`);
-    return res.json();
-}
+export const getChampion = (id: string) =>
+    fetchJSON(`${API_BASE}/api/champions/${id}`);
+
+export const getRegions = () =>
+    fetchJSON(`${API_BASE}/api/regions`);
+
+export const getSkins = () =>
+    fetchJSON(`${API_BASE}/api/skins`);

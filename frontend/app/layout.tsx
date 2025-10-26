@@ -1,5 +1,4 @@
-import "./globals.css";
-import "../styles/_layout.scss";
+import "@/styles/_layout.scss";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

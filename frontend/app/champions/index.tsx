@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getChampions } from "@/lib/api";
 
 export default async function ChampionsPage() {

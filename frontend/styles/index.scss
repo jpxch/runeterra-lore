@@ -1,5 +1,3 @@
-@use "./variables";
-@use "./mixins";
-@use "./layout";
-@use "./champions";
-@use "./regions";
+@forward "variables";
+@use "layout";
+@use "champions";
