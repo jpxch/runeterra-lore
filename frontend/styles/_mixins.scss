@@ -1,18 +1,41 @@
+// =================================
+// Full-Spectrum Labs - Global Mixins
+// =================================
+@mixin card {
+    background: $fsl-panel;
+    border: 1px solid $fsl-border;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba($fsl-border, 0.25);
+    transition: all 0.3s ease;
+}
+
 @mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@mixin neon-text($color) {
-  color: $color;
-  text-shadow: 0 0 5px $color, 0 0 10px $color, 0 0 20px $color;
+@mixin hover-glow($color: $fsl-accent-glow) {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    &:hover {
+        box-shadow: 0 0 12px $color;
+        transform: translateY(-3px);
+    }
 }
 
-@mixin glass-panel($bg: rgba(255, 255, 255, 0.05)) {
-  background: $bg;
-  backdrop-filter: blur(6px);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+@mixin glass-panel($blur: 10px) {
+    background: rgba($fsl-panel, 0.7);
+    backdrop-filter: blur($blur);
+    border: 1px solid rgba($fsl-border, 0.4);
+}
+
+@mixin fade-in($duration: 0.6s) {
+    opacity: 0;
+    animation: fadeIn $duration ease forwards;
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
 }

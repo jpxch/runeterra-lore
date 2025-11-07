@@ -1,47 +1,40 @@
-@use "variables" as *;
+// ===============================================
+//  Full-Spectrum Labs — Layout / Global Structure
+// ===============================================
 
 body {
-  background-color: $color-bg;
-  color: $color-text;
-  font-family: $font-primary;
-  font-size: $font-size-base;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    background-color: $fsl-bg;
+    color: $fsl-text-primary;
+    font-family: $fsl-font-sans;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: $fsl-panel;
+    border-bottom: 1px solid $fsl-border;
+    padding: $space-md 0;
+
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: $space-lg;
+
+        a {
+            color: $fsl-text-primary;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+
+            &:hover {
+                color: $fsl-accent;
+                text-shadow: 0 0 8px $fsl-accent-glow;
+            }
+        }
+    }
 }
 
 main {
-  flex: 1;
-  padding: $space-md;
-}
-
-h1, h2, h3, h4 {
-  color: $color-text;
-  letter-spacing: 0.02rem;
-  margin-bottom: $space-sm;
-}
-
-a {
-  color: $color-cyan;
-  text-decoration: none;
-  transition: $transition-base;
-
-  &:hover {
-    color: $color-violet;
-  }
-}
-
-.card {
-    background: $color-surface;
-    border: 1px solid $color-border;
-    border-radius: $radius-base;
-    box-shadow: $shadow-glow;
-    transition: $transition-base;
-
-    &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0 25px rgba(0, 234, 255, 0.3);
-    }
+    padding: $space-lg;
+    min-height: calc(100vh - 80px);
 }

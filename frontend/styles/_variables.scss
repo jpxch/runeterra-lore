@@ -1,35 +1,30 @@
-// === Full-Spectrum Labs Visual System ===
-// Palette
-$color-bg: #0a0a0f;
-$color-surface: #141418;
-$color-border: #1f1f24;
-$color-text: #e5e5e7;
-$color-subtext: #9b9ba0;
+// ===========================================
+// Full-Spectrum Labs - Core Design Tokens
+// ===========================================
 
-// Accent spectrum
-$color-cyan: #00eaff;
-$color-violet: #9b6cff;
-$color-magenta: #ff3fa4;
-$color-gold: #f6c945;
+// Color Palette
+$fsl-bg: #0a0a0f;
+$fsl-panel: #141421;
+$fsl-border: #2b2b3d;
 
-// Shadows & gradients
-$shadow-glow: 0 0 15px rgba(0, 234, 255, 0.2);
-$gradient-fsl: linear-gradient(135deg, $color-cyan, $color-violet 100%);
+$fsl-accent: #1e90ff;
+$fsl-accent-glow: rgba(30, 144, 255, 0.6);
+$fsl-error: #ff4c4c;
+
+$fsl-text-primary: #e6e6fa;
+$fsl-text-secondary: #b8b8d0;
 
 // Typography
-$font-primary: "Fira Code", monospace;
-$font-size-base: 1rem;
-$font-size-heading: 1.5rem;
+$fsl-font-sans: "Inter", "Segoe UI", sans-serif;
+$fsl-font-mono: "Fira Code", monospace;
+
+$fsl-font-size-sm: 14px;
+$fsl-front-size-md: 16px;
+$fsl-font-size-lg: 20px;
 
 // Spacing
-$space-xs: 0.5remn;
-$space-sm: 1rem;
-$space-md: 2rem;
-$space-lg: 4rem;
-
-// Radius
-$radius-base: 0.75rem;
-$radius-lg: 1rem;
-
-// Transition
-$transition-base: all 0.25s ease-in-out;
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 40px;

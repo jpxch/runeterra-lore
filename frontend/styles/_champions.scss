@@ -1,45 +1,55 @@
-@use "variables" as *;
+// _champions.scss
 
-.champion-grid {
+// Card Styling for Champions Skins
+.champion-skins {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: $space-md;
-    margin-top: $space-md;
-}
+    gap: $space-lg;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    margin-top: $space-lg;
 
-.champion-card {
-    @extend .card;
-    overflow: hidden;
-    position: relative;
+    .skin-card {
+        @include card;
+        padding: $space-md;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        background-color: $fsl-panel;
+        box-shadow: 0 4px 8px rgba($fsl-border, 0.6);
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.85;
-        transition: $transition-base;
-    }
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 16px rgba($fsl-accent, 0.6);
+        }
 
-    &:hover img {
-        opacity: 1;
-        transform: scale(1.05);
-    }
+        .skin-name {
+            font-family: $fsl-font-sans;
+            font-size: $fsl-font-size-lg;
+            color: $fsl-text-primary;
+            margin-bottom: $space-sm;
+            text-align: center;
+        }
 
-    .info {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
-    }
+        .skin-splash {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: $space-sm;
+            object-fit: cover;
+        }
 
-    .name {
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
+        .skin-lore {
+            font-family: $fsl-font-sans;
+            font-size: $fsl-font-size-sm;
+            color: $fsl-text-secondary;
+            text-align: center;
+            margin-top: $space-sm;            
+        }
 
-    .title {
-        font-size: 0.9rem;
-        color: $color-subtext;
+        .skin-chromas {
+            font-size: $fsl-font-size-sm;
+            color: $fsl-accent;
+            text-align: center;
+            margin-top: $space-sm;
+            font-weight: bold;
+        }
     }
 }
